@@ -8,22 +8,29 @@
       <h2>Registrar Eventos</h2>
       <form id="formulario_evento" action="#" method="post">
         <label for="cliente">Cliente:</label>
-        <input type="text" name="cliente" />
+        <!-- <input type="text" name="cliente" /> -->
+
+        <!-- v-model -->
+        <input type="text" name="cliente" v-model="evento.cliente">
+        <!-- v-model se coloca en el input -->
+        <!-- dentro de v-model voy a colocar la variable que uiero que se este escuchando -->
 
         <label for="documento">Documento:</label>
-        <input type="text" name="documento" />
+        <input type="text" name="documento" v-model="evento.documento" />
 
         <label for="salon">Salon</label>
         <div>
-          <input type="radio" name="salon" id="" /> Normal
-          <input type="radio" name="salon" id="" /> Grande
+          <input type="radio" name="salon" value="1" v-model="salon" id="" /> Normal
+          <input type="radio" name="salon" value="2" v-model="salon" id="" /> Grande
         </div>
 
         <label for="meseros_extra">Agregar meseros extra?</label>
-        <input type="checkbox" name="meseros_extra" value="Si" id="" />
+        <input type="checkbox" name="meseros_extra" v-model="extra" value="Si" id="" />
 
-        <label for="cantidad">Cantidad Meseros</label>
-        <input type="number" name="cantidad" />
+        <!-- v-if -->
+        <!-- Me muestra la etiqueta si se cumple la condicion que se coloca entre las comillas -->
+        <label v-if="extra" for="cantidad">Cantidad Meseros</label>
+        <input v-if="extra" type="number" name="cantidad" />
 
         <label for="servicio_comida">Incluir Comida</label>
         <input type="checkbox" name="servicio_comida" value="Si" id="" />
@@ -33,10 +40,21 @@
 
         <button type="reset" name="limpiar">Limpiar</button>
 
-        <button onclick="procesarInformacion()" type="button">
+        <!-- <button onclick="procesarInformacion()" type="button"> -->
+          <!-- en lugar de onclick se maneja v-on -->
+          <!-- v-on = @ se puede reemplazar por la arroba@ -->
+          <!-- <button v-on:click="procesarInformacion()" type="button"> -->
+          <button @click.prevent="procesarInformacion()" type="button">
+
           Agregar Evento
         </button>
       </form>
+
+      <!-- ejemplo de reactividad -->
+      <!-- repite lo que estoy escribiendo -->
+      <!-- <h2>Cliente: {{evento.cliente}}</h2> -->
+      <h2>salon: {{salon}}</h2>
+
     </div>
 
     <div>
@@ -55,7 +73,10 @@
           <!-- <v-for> -->
           <!-- es un for de javascript -->
           <!-- la key es obligatoria -->
-          <tr v-for="unEvento in listaEventos" :key="unEvento">
+          <!-- <tr v-for="unEvento in listaEventos" :key="unEvento"> -->
+          <tr v-for="unEvento in listaEventos" v-bind:key="unEvento">
+            <!-- v-bind: v-bind me va a permitir colocar cualquier variable que haya definido dentro de data -->
+            <!-- v-bind:key es lo mismo que :key -->
             <td>{{ unEvento.cliente }}</td>
             <td>{{ unEvento.salon.nombre }}</td>
             <td>{{ unEvento.meseros }}</td>
@@ -98,13 +119,41 @@ export default {
         },
       ], //lista
 
-      evento: {}, //diccionario
+      evento: {
+        cliente:"",
+        documento:"",
+        salon:{},
+        meseros:0,
+        platos:0,
+        total:0,
+
+
+      }, //diccionario que me va a guardar toda la informacion del formulario
+
+      salon:0,
+      extra:true,
+      comida:false,
+
 
     }; //Cierre return
   }, //Cierre data
 
   name: "Home",
   components: {},
+
+  // Atributo methods
+  // aqui se definen los diferentes metodos y funciones
+  // si yo quiero referirme a una variable que este dentro de dat debo usar el this.
+
+  methods:{
+    procesarInformacion(){
+      // console.log(this.evento);
+
+    } // cierre procesarInformacion
+
+  } // cierre methods
+
+
 }; //Cierre export default
 </script>
 
