@@ -1,5 +1,5 @@
 <template>
-<!-- <img src="" alt=""> -->
+<!-- <img src="@/assets/logo.pgn" alt=""> -->
 <h1>Menu</h1>
 
   <div id="nav">
