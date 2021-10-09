@@ -11,7 +11,7 @@
         <!-- <input type="text" name="cliente" /> -->
 
         <!-- v-model -->
-        <input type="text" name="cliente" v-model="evento.cliente">
+        <input type="text" name="cliente" v-model="evento.cliente" />
         <!-- v-model se coloca en el input -->
         <!-- dentro de v-model voy a colocar la variable que uiero que se este escuchando -->
 
@@ -20,12 +20,20 @@
 
         <label for="salon">Salon</label>
         <div>
-          <input type="radio" name="salon" value="1" v-model="salon" id="" /> Normal
-          <input type="radio" name="salon" value="2" v-model="salon" id="" /> Grande
+          <input type="radio" name="salon" value="0" v-model="salon" id="" />
+          Normal
+          <input type="radio" name="salon" value="1" v-model="salon" id="" />
+          Grande
         </div>
 
         <label for="meseros_extra">Agregar meseros extra?</label>
-        <input type="checkbox" name="meseros_extra" v-model="extra" value="Si" id="" />
+        <input
+          type="checkbox"
+          name="meseros_extra"
+          v-model="extra"
+          value="Si"
+          id=""
+        />
 
         <!-- v-if -->
         <!-- Me muestra la etiqueta si se cumple la condicion que se coloca entre las comillas -->
@@ -41,11 +49,10 @@
         <button type="reset" name="limpiar">Limpiar</button>
 
         <!-- <button onclick="procesarInformacion()" type="button"> -->
-          <!-- en lugar de onclick se maneja v-on -->
-          <!-- v-on = @ se puede reemplazar por la arroba@ -->
-          <!-- <button v-on:click="procesarInformacion()" type="button"> -->
-          <button @click.prevent="procesarInformacion()" type="button">
-
+        <!-- en lugar de onclick se maneja v-on -->
+        <!-- v-on = @ se puede reemplazar por la arroba@ -->
+        <!-- <button v-on:click="procesarInformacion()" type="button"> -->
+        <button @click.prevent="procesarInformacion()" type="button">
           Agregar Evento
         </button>
       </form>
@@ -53,8 +60,7 @@
       <!-- ejemplo de reactividad -->
       <!-- repite lo que estoy escribiendo -->
       <!-- <h2>Cliente: {{evento.cliente}}</h2> -->
-      <h2>salon: {{salon}}</h2>
-
+      <h2>salon: {{ salon }}</h2>
     </div>
 
     <div>
@@ -101,13 +107,33 @@
 // }
 
 export default {
+// mounted(){
+// this.listaEventos = this.$route.params.datos;
+
+// },
+
+
   data() {
     return {
       titulo: "Gestion de eventos",
 
-        salonNormal : { "nombre": "Normal", "precio": 1000000, "extra_mesero": 150000, "cantidad_meseros": 1, "plato": 50000 },
-        salonGrande : { "nombre": "Grande", "precio": 2000000, "extra_mesero": 100000, "cantidad_meseros": 4, "plato": 40000 },
-      
+      listaSalones: [
+        {
+          nombre: "Normal",
+          precio: 1000000,
+          extra_mesero: 150000,
+          cantidad_meseros: 1,
+          plato: 50000,
+        },
+        {
+          nombre: "Grande",
+          precio: 2000000,
+          extra_mesero: 100000,
+          cantidad_meseros: 4,
+          plato: 40000,
+        },
+      ],
+
       listaEventos: [
         {
           cliente: "Jose",
@@ -120,21 +146,17 @@ export default {
       ], //lista
 
       evento: {
-        cliente:"",
-        documento:"",
-        salon:{},
-        meseros:0,
-        platos:0,
-        total:0,
-
-
+        cliente: "",
+        documento: "",
+        salon: {},
+        meseros: 0,
+        platos: 0,
+        total: 0,
       }, //diccionario que me va a guardar toda la informacion del formulario
 
-      salon:0,
-      extra:true,
-      comida:false,
-
-
+      salon: -1,
+      extra: false,
+      comida: false,
     }; //Cierre return
   }, //Cierre data
 
@@ -145,15 +167,37 @@ export default {
   // aqui se definen los diferentes metodos y funciones
   // si yo quiero referirme a una variable que este dentro de dat debo usar el this.
 
-  methods:{
-    procesarInformacion(){
+  methods: {
+    procesarInformacion() {
       // console.log(this.evento);
 
-    } // cierre procesarInformacion
+      this.evento.salon = this.listaSalones[this.salon - 1];
+      if (this.extra) {
+        this.evento.meseros += this.evento.salon.cantidad_meseros;
+      } else {
+        this.evento.meseros = this.evento.salon.cantidad_meseros;
+      } //cierre else
 
-  } // cierre methods
+      if (!this.comida) {
+        this.platos = 0;
+      } // Cierre if
 
+      let valorMeseros = this.evento.meseros * this.evento.salon.extra_mesero;
+      let valorComida = this.evento.platos * this.evento.salon.plato;
 
+      this.evento.total = valorComida + valorMeseros + this.evento.salon.precio;
+
+      console.log(evento);
+
+      this.listaEventos.push(this.evento);
+
+      // si quiero que se vaya para otra pagina cuando hago click en el boton.
+      // La ruta tiene que estar defina en el router.
+      // this.$router.push('/about');
+      // this.$router.push({name:"About"}, params:{datos:this.listaEventos}});
+
+    }, // cierre procesarInformacion
+  }, // cierre methods
 }; //Cierre export default
 </script>
 
